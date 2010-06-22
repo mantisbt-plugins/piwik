@@ -1,0 +1,13 @@
+<?php
+
+# Copyright (C) 2010 John Reese
+# Licensed under the MIT license
+
+$s_plugin_Piwik_ = '';
+$s_plugin_Piwik_title = 'Piwik';
+$s_plugin_Piwik_description = 'Add Piwik analytics to your Mantis site.';
+
+$s_plugin_Piwik_piwik_uri = 'Piwik URI<br/><span class="small">(Include trailing slash)</span>';
+$s_plugin_Piwik_admin_threshold = 'Administrator Threshold';
+$s_plugin_Piwik_track_admins = 'Track Administrators';
+
