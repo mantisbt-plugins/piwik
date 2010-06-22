@@ -26,6 +26,11 @@ $t_track_admins = plugin_config_get( 'track_admins' );
 <td><input name="piwik_uri" value="<?php echo string_attribute( plugin_config_get( 'piwik_uri' ) ) ?>"/></td>
 </tr>
 
+<tr <?php echo helper_alternate_class() ?>>
+<td class="category"><?php echo plugin_lang_get( 'site_id' ) ?></td>
+<td><input name="site_id" value="<?php echo string_attribute( plugin_config_get( 'site_id' ) ) ?>"/></td>
+</tr>
+
 <tr>
 <td class="spacer"></td>
 </tr>

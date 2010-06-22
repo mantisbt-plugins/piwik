@@ -26,6 +26,7 @@ class PiwikPlugin extends MantisPlugin {
 			'track_admins' => true,
 
 			'piwik_uri' => 'http://localhost/piwik/',
+			'site_id' => 0,
 		);
 	}
 
@@ -45,6 +46,7 @@ class PiwikPlugin extends MantisPlugin {
 		$t_admin_threshold = plugin_config_get( 'admin_threshold' );
 		$t_track_admins = plugin_config_get( 'track_admins' );
 
+		$t_site_id = plugin_config_get( 'site_id' );
 		$t_piwik_uri = plugin_config_get( 'piwik_uri' );
 		$t_piwik_uri = string_attribute( array_pop( explode( '://', $t_piwik_uri, 2 ) ) );
 
@@ -60,7 +62,7 @@ class PiwikPlugin extends MantisPlugin {
 	document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 	try {
-		var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+		var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", {$t_site_id});
 		piwikTracker.trackPageView();
 		piwikTracker.enableLinkTracking();
 	} catch( err ) {}
