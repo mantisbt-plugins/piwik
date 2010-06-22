@@ -66,7 +66,7 @@ class PiwikPlugin extends MantisPlugin {
 		piwikTracker.trackPageView();
 		piwikTracker.enableLinkTracking();
 	} catch( err ) {}
-</script><noscript><p><img src="http://{$t_piwik_uri}piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
+</script><noscript><p><img src="http://{$t_piwik_uri}piwik.php?idsite={$t_site_id}" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tag -->
 EOT;
 
