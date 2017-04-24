@@ -5,8 +5,10 @@
 
 access_ensure_global_level( ADMINISTRATOR );
 
-html_page_top1( plugin_lang_get( 'title' ) );
-html_page_top2();
+layout_page_header( plugin_lang_get( 'title' ) );
+
+layout_page_begin( 'manage_overview_page.php' );
+print_manage_menu( 'manage_plugin_page.php' );
 
 $t_admin_threshald = plugin_config_get( 'admin_threshold' );
 $t_track_admins = plugin_config_get( 'track_admins' );
@@ -53,5 +55,6 @@ $t_track_admins = plugin_config_get( 'track_admins' );
 </form>
 
 <?php
-html_page_bottom1( __FILE__ );
+
+layout_page_end();
 

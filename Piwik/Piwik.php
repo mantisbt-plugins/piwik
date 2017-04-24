@@ -12,7 +12,7 @@ class PiwikPlugin extends MantisPlugin {
 
 		$this->version = '1.0';
 		$this->requires = array(
-			'MantisCore' => '1.2',
+			'MantisCore' => '2.0.0',
 		);
 
 		$this->author = 'John Reese';
@@ -33,6 +33,7 @@ class PiwikPlugin extends MantisPlugin {
 	function hooks() {
 		return array(
 			'EVENT_LAYOUT_BODY_END' => 'footer',
+			'EVENT_PLUGIN_INIT' => 'set_custom_security_headers'
 		);
 	}
 
@@ -46,7 +47,6 @@ class PiwikPlugin extends MantisPlugin {
 		$t_admin_threshold = plugin_config_get( 'admin_threshold' );
 		$t_track_admins = plugin_config_get( 'track_admins' );
 
-		$t_site_id = plugin_config_get( 'site_id' );
 		$t_piwik_uri = plugin_config_get( 'piwik_uri' );
 		$t_piwik_uri = string_attribute( array_pop( explode( '://', $t_piwik_uri, 2 ) ) );
 
@@ -55,22 +55,40 @@ class PiwikPlugin extends MantisPlugin {
 			return;
 		}
 
-		$t_piwik_js = <<< EOT
-<!-- Piwik -->
-<script type="text/javascript">
-	var pkBaseURL = (("https:" == document.location.protocol) ? "https://{$t_piwik_uri}" : "http://{$t_piwik_uri}");
-	document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
-	try {
-		var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", {$t_site_id});
-		piwikTracker.trackPageView();
-		piwikTracker.enableLinkTracking();
-	} catch( err ) {}
-</script><noscript><p><img src="http://{$t_piwik_uri}piwik.php?idsite={$t_site_id}" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tag -->
-EOT;
+		// assuming that the local protocol is the same as the one of remote piwik server
+		if(!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off") {
+			$pkBaseURL = "https://" . $t_piwik_uri;
+		} else {
+			$pkBaseURL = "http://" . $t_piwik_uri;
+		}
+
+		
+
+		$t_piwik_js = '
+			<!-- Piwik -->
+			<script src="'.$pkBaseURL.'/piwik.js" async defer></script>
+			<script type="text/javascript" src="' . plugin_page( 'tracking.php' ) . '"></script>
+			<!-- End Piwik Tag -->
+		';
 
 		return $t_piwik_js;
+	}
+
+
+	function set_custom_security_headers() {
+
+		$t_piwik_uri = plugin_config_get( 'piwik_uri' );
+		$t_piwik_uri = string_attribute( array_pop( explode( '://', $t_piwik_uri, 2 ) ) );
+
+		if(!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off") {
+			$pkBaseURL = "https://" . $t_piwik_uri;
+		} else {
+			$pkBaseURL = "http://" . $t_piwik_uri;
+		}
+
+		http_csp_add( 'script-src', $pkBaseURL );
+		http_csp_add( 'img-src', $pkBaseURL );
+
 	}
 }
 
